@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Video {
+  id        String    @id @db.Uuid
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @db.Timestamp(6)
+  deletedAt DateTime? @db.Timestamp(6)
+  url       String    @db.VarChar
+  sizeInKb  Int
+  duration  Int
+  movieId   String?   @unique @db.Uuid
+  episodeId String?   @unique @db.Uuid
+  episode   episode?  @relation(fields: [episodeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Movie     Movie?    @relation(fields: [movieId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Content {
+  id          String            @id @db.Uuid
+  createdAt   DateTime          @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime          @default(now()) @db.Timestamp(6)
+  deletedAt   DateTime?         @db.Timestamp(6)
+  type        Content_type_enum
+  title       String            @db.VarChar
+  description String            @db.VarChar
+  Movie       Movie?
+  TvShow      TvShow?
+}
+
+model Movie {
+  id          String     @id @db.Uuid
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @db.Timestamp(6)
+  deletedAt   DateTime?  @db.Timestamp(6)
+  contentId   String?    @unique @db.Uuid
+  thumbnailId String?    @unique @db.Uuid
+  Content     Content?   @relation(fields: [contentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Thumbnail   Thumbnail? @relation(fields: [thumbnailId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Video       Video?
+}
+
+model Thumbnail {
+  id        String    @id @db.Uuid
+  createdAt DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @db.Timestamp(6)
+  deletedAt DateTime? @db.Timestamp(6)
+  url       String    @db.VarChar
+  Movie     Movie?
+  TvShow    TvShow?
+  episode   episode?
+}
+
+model TvShow {
+  id          String     @id @db.Uuid
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @db.Timestamp(6)
+  deletedAt   DateTime?  @db.Timestamp(6)
+  contentId   String?    @unique @db.Uuid
+  thumbnailId String?    @unique @db.Uuid
+  Content     Content?   @relation(fields: [contentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Thumbnail   Thumbnail? @relation(fields: [thumbnailId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  episode     episode[]
+}
+
+model episode {
+  id          String     @id @db.Uuid
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @default(now()) @db.Timestamp(6)
+  deletedAt   DateTime?  @db.Timestamp(6)
+  title       String     @db.VarChar
+  description String     @db.VarChar
+  season      Int
+  number      Int
+  tvShowId    String?    @db.Uuid
+  thumbnailId String?    @unique @db.Uuid
+  Video       Video?
+  Thumbnail   Thumbnail? @relation(fields: [thumbnailId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  TvShow      TvShow?    @relation(fields: [tvShowId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum Content_type_enum {
+  MOVIE
+  TV_SHOW
+}
