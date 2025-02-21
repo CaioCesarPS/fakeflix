@@ -88,13 +88,28 @@ export class ContentController {
       );
     }
 
-    return await this.contentManagementService.createContent({
+    const createdContent = await this.contentManagementService.createContent({
       title: contentData.title,
       description: contentData.description,
       url: videoFile.path,
       thumbnailUrl: thumbnailFile.path,
       sizeInKb: videoFile.size,
     });
+
+    const video = createdContent.getMedia()?.getVideo();
+
+    if (!video) {
+      throw new BadRequestException('Video must be present')
+    }
+
+    return {
+      id: createdContent.getId(),
+      title: createdContent.getTitle(),
+      description: createdContent.getDescription(),
+      url: video.getUrl(),
+      createdAt: createdContent.getCreatedAt(),
+      updatedAt: createdContent.getUpdatedAt(),
+    };
   }
 
   @Get('stream/:videoId')
