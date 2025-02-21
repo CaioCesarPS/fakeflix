@@ -76,7 +76,7 @@ export class ContentRepository {
       });
 
       if (!content) {
-        return;
+        return null;
       }
 
       return this.mapToEntity(content);
@@ -131,6 +131,8 @@ export class ContentRepository {
         );
       }
     }
+
+    return contentEntity
   }
 
   private isMovie(content: unknown): content is Prisma.ContentGetPayload<{
