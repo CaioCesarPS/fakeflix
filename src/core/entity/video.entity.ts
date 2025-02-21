@@ -1,7 +1,7 @@
-import { randomUUID } from 'node:crypto';
-import { BaseEntity, BaseEntityProps } from './base.entity';
+import { BaseEntity, BaseEntityProps } from '@src/core/entity/base.entity';
+import { randomUUID } from 'crypto';
 
-export type newVideoEntity = Omit<
+export type NewVideoEntity = Omit<
   VideoEntityProps,
   'id' | 'createdAt' | 'updatedAt'
 >;
@@ -21,7 +21,7 @@ export class VideoEntity extends BaseEntity {
     super(data);
   }
 
-  static createNew(data: newVideoEntity, id = randomUUID()): VideoEntity {
+  static createNew(data: NewVideoEntity, id = randomUUID()): VideoEntity {
     return new VideoEntity({
       id,
       url: data.url,
@@ -44,12 +44,12 @@ export class VideoEntity extends BaseEntity {
   }
 
   static getMaxFileSize(): number {
-    const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
+    const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1 gigabyte
     return MAX_FILE_SIZE;
   }
 
   static getMaxThumbnailSize(): number {
-    const MAX_THUMBNAIL_SIZE = 1024 * 1024 * 10; // 10MB
+    const MAX_THUMBNAIL_SIZE = 1024 * 1024 * 10; // 10 megabytes
     return MAX_THUMBNAIL_SIZE;
   }
 

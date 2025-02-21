@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { BaseEntity, BaseEntityProps } from './base.entity';
 import { VideoEntity } from './video.entity';
-import { ThumbnailEntity } from './thumbnail.entity';
+import { BaseEntity, BaseEntityProps } from '@src/core/entity/base.entity';
+import { ThumbnailEntity } from '@src/core/entity/thumbnail.entity';
 
 export interface MovieEntityProps extends BaseEntityProps {
   video: VideoEntity;
@@ -32,7 +32,6 @@ export class MovieEntity extends BaseEntity {
     return new MovieEntity({
       id: data.id,
       video: data.video,
-      thumbnail: data.thumbnail,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     });
@@ -42,12 +41,10 @@ export class MovieEntity extends BaseEntity {
     return {
       id: this.id,
       video: this.video.serialize(),
-      thumbnail: this.thumbnail?.serialize(),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
   }
-
   addVideo(video: VideoEntity): void {
     this.video = video;
   }
@@ -55,7 +52,6 @@ export class MovieEntity extends BaseEntity {
   getVideo(): VideoEntity {
     return this.video;
   }
-
   addThumbnail(thumbnail: ThumbnailEntity): void {
     this.thumbnail = thumbnail;
   }

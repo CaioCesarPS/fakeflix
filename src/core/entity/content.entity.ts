@@ -1,6 +1,6 @@
-import { randomUUID } from 'node:crypto';
-import { BaseEntity, BaseEntityProps } from './base.entity';
+import { randomUUID } from 'crypto';
 import { MovieEntity } from './movie.entity';
+import { BaseEntity, BaseEntityProps } from '@src/core/entity/base.entity';
 
 export interface ContentEntityProps extends BaseEntityProps {
   media?: MovieEntity;
@@ -56,10 +56,10 @@ export class ContentEntity extends BaseEntity {
   serialize() {
     return {
       id: this.id,
-      media: this.media?.serialize(),
-      type: this.type,
       title: this.title,
       description: this.description,
+      media: this.media?.serialize(),
+      type: this.type,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

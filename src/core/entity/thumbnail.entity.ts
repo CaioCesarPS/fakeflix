@@ -1,5 +1,5 @@
+import { BaseEntity, BaseEntityProps } from '@src/core/entity/base.entity';
 import { randomUUID } from 'crypto';
-import { BaseEntity, BaseEntityProps } from './base.entity';
 
 export interface ThumbnailEntityProps extends BaseEntityProps {
   url: string;
@@ -12,7 +12,10 @@ export class ThumbnailEntity extends BaseEntity {
     super(data);
   }
 
-  static createNew(data: Omit<ThumbnailEntityProps, 'id' | 'createdAt' | 'updatedAt'>, id = randomUUID()): ThumbnailEntity {
+  static createNew(
+    data: Omit<ThumbnailEntityProps, 'id' | 'createdAt' | 'updatedAt'>,
+    id = randomUUID(),
+  ): ThumbnailEntity {
     return new ThumbnailEntity({
       ...data,
       id,
