@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from './persistence/prisma/prisma.service';
 import { ContentController } from './http/rest/controller/content.controller';
 import { ContentManagementService } from './core/service/content-management.service';
 import { MediaPlayerService } from './core/service/media-player.service';
@@ -12,7 +11,6 @@ import { VideoRepository } from './persistence/repository/video.repository';
   imports: [ConfigModule],
   controllers: [ContentController, MediaPlayerController],
   providers: [
-    PrismaService,
     ContentManagementService,
     MediaPlayerService,
     ContentRepository,
