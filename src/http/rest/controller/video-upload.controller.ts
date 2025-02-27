@@ -2,32 +2,25 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Get,
-  Header,
   HttpCode,
   HttpStatus,
-  NotFoundException,
-  Param,
   Post,
   Req,
-  Res,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { randomUUID } from 'node:crypto';
-import path, { extname } from 'node:path';
-import type { Request, Response } from 'express';
-import fs from 'node:fs';
+import { extname } from 'node:path';
+import type { Request } from 'express';
 import { ContentManagementService } from '@src/core/service/content-management.service';
 import { MediaPlayerService } from '@src/core/service/media-player.service';
 import { CreateVideoResponseDto } from '../dto/response/create-video-response.dto';
 import { RestResponseInterceptor } from '../interceptor/rest-response.interceptor';
-import { VideoNotFoundException } from '@src/core/exception/video-not-found.exception';
 
 @Controller('content')
-export class ContentController {
+export class VideoUploadController {
   constructor(
     private readonly contentManagementService: ContentManagementService,
     private readonly mediaPlayerService: MediaPlayerService,
@@ -88,7 +81,24 @@ export class ContentController {
       );
     }
 
-    const createdContent = await this.contentManagementService.createContent({
+    if (!videoFile || !thumbnailFile) {
+      throw new BadRequestException(
+        'Both video and thumbnail files are required.',
+      );
+    }
+
+    const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1 gigabyte
+
+    if (videoFile.size > MAX_FILE_SIZE) {
+      throw new BadRequestException('File size exceeds the limit.');
+    }
+    const MAX_THUMBNAIL_SIZE = 1024 * 1024 * 10; // 10 megabytes
+
+    if (thumbnailFile.size > MAX_THUMBNAIL_SIZE) {
+      throw new BadRequestException('Thumbnail size exceeds the limit.');
+    }
+
+    const createdMovie = await this.contentManagementService.createMovie({
       title: contentData.title,
       description: contentData.description,
       url: videoFile.path,
@@ -96,19 +106,16 @@ export class ContentController {
       sizeInKb: videoFile.size,
     });
 
-    const video = createdContent.getMedia()?.getVideo();
-
-    if (!video) {
-      throw new BadRequestException('Video must be present');
-    }
-
     return {
-      id: createdContent.getId(),
-      title: createdContent.getTitle(),
-      description: createdContent.getDescription(),
-      url: video.getUrl(),
-      createdAt: createdContent.getCreatedAt(),
-      updatedAt: createdContent.getUpdatedAt(),
+      id: createdMovie.id,
+      title: createdMovie.title,
+      description: createdMovie.description,
+      url: createdMovie.movie.video.url,
+      thumbnailUrl: createdMovie.movie.thumbnail?.url,
+      sizeInKb: createdMovie.movie.video.sizeInKb,
+      duration: createdMovie.movie.video.duration,
+      createdAt: createdMovie.createdAt,
+      updatedAt: createdMovie.updatedAt,
     };
   }
 }
