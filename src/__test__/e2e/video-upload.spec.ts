@@ -8,7 +8,7 @@ import { VideoRepository } from '@src/persistence/repository/video.repository';
 import fs from 'fs';
 import request from 'supertest';
 
-describe('ContentController (e2e)', () => {
+describe('VideoUploadController (e2e)', () => {
   let module: TestingModule;
   let app: INestApplication;
   let videoRepository: VideoRepository;
