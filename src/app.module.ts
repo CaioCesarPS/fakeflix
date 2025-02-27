@@ -6,15 +6,20 @@ import { MediaPlayerController } from './http/rest/controller/media-player.contr
 import { VideoRepository } from './persistence/repository/video.repository';
 import { PersistenceModule } from './persistence/persistence.module';
 import { VideoUploadController } from './http/rest/controller/video-upload.controller';
+import { ConfigModule } from './infra/module/config/config.module';
+import { ExternalMovieClient } from './http/client/external-movie-rating.client';
+import { HttpClient } from './infra/http/client/http.client';
 
 @Module({
-  imports: [PersistenceModule.forRoot()],
+  imports: [PersistenceModule.forRoot(), ConfigModule.forRoot()],
   controllers: [VideoUploadController, MediaPlayerController],
   providers: [
     ContentManagementService,
     MediaPlayerService,
     ContentRepository,
-    VideoRepository
+    VideoRepository,
+    ExternalMovieClient,
+    HttpClient,
   ],
 })
 export class AppModule {}
