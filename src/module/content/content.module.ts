@@ -3,7 +3,7 @@ import { ContentManagementService } from './core/service/content-management.serv
 import { MediaPlayerService } from './core/service/media-player.service';
 import { MediaPlayerController } from './http/rest/controller/media-player.controller';
 import { VideoUploadController } from './http/rest/controller/video-upload.controller';
-import { ConfigModule } from './infra/module/config/config.module';
+import { ConfigModule } from '../shared/module/config/config.module';
 import { ExternalMovieClient } from './http/client/external-movie-rating.client';
 import { HttpClient } from './infra/http/client/http.client';
 import { PersistenceModule } from './persistence/persistence.module';

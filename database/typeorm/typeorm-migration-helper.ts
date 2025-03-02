@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { PersistenceModule } from '@contentModule/persistence/persistence.module';
 import { DataSourceOptions } from 'typeorm';
 import { createPostgresDatabase } from 'typeorm-extension';
-import { ConfigService } from '@contentModule/infra/module/config/service/config.service';
+import { ConfigService } from '@src/module/shared/module/config/service/config.service';
 import { TypeOrmMigrationService } from '@contentModule/infra/module/typeorm/service/typeorm-migration.service';
 
 const createDatabaseModule = async () => {
